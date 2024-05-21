@@ -55,33 +55,55 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
         WriteColor("CT BANS - Plugins has been [*LOADED*]", ConsoleColor.Green);
         CreateDatabase();
 
-        AddCommandListener("jointeam", OnPlayerChangeTeam);
-        RegisterListener<Listeners.OnTick>(() =>
-        {
-        for (int i = 1; i < Server.MaxPlayers; i++)
-        {
-            var ent = NativeAPI.GetEntityFromIndex(i);
-            if (ent == 0)
-                continue;
-            var client = new CCSPlayerController(ent);
-            if (client == null || !client.IsValid)
-                continue;
-                if (Showinfo[client.Index] == 1)
-                {
-                    client.PrintToCenterHtml(
-                            $"<img src='https://icons.iconarchive.com/icons/paomedia/small-n-flat/48/sign-ban-icon.png'><br><br>" +
-                            $"You are <font color='red'>banned</font> to join in <font color='blue'>CT</font>!<br>" +
-                            $"<font color='green'>Remaining time</font> <font color='red'>{remaining[client.Index]}</font><br>" +
-                            $"<font color='green'>Reason of ban</font>  <font color='red'>{reason[client.Index]}</font><br>");
-                    AddTimer(10.0f, () =>
-                    {
-                        Showinfo[client.Index] = null;
-                    });
-                }
-        }
-        });
+        // AddCommandListener("jointeam", OnPlayerChangeTeam);
+        RegisterEventHandler<EventPlayerSpawn>(OnPlayerSpawn);
+        // RegisterListener<Listeners.OnTick>(() =>
+        // {
+        // for (int i = 1; i < Server.MaxPlayers; i++)
+        // {
+        //     var ent = NativeAPI.GetEntityFromIndex(i);
+        //     if (ent == 0)
+        //         continue;
+        //     var client = new CCSPlayerController(ent);
+        //     if (client == null || !client.IsValid)
+        //         continue;
+        //         if (Showinfo[client.Index] == 1)
+        //         {
+        //             client.PrintToCenterHtml(
+        //                     $"<img src='https://icons.iconarchive.com/icons/paomedia/small-n-flat/48/sign-ban-icon.png'><br><br>" +
+        //                     $"<font color='red'>你已被禁止</font> 加入 <font color='blue'>CT</font>!<br>" +
+        //                     $"<font color='green'>剩余时间</font> <font color='red'>{remaining[client.Index]}</font><br>" +
+        //                     $"<font color='green'>原因</font>  <font color='red'>{reason[client.Index]}</font><br>");
+        //             AddTimer(10.0f, () =>
+        //             {
+        //                 Showinfo[client.Index] = null;
+        //             });
+        //         }
+        // }
+        // });
 
     }
+
+    public HookResult OnPlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
+    {
+        CCSPlayerController player = @event.Userid;
+        if (player == null || !player.IsValid)
+            return HookResult.Continue;
+        if (player.PawnIsAlive)
+        {
+            var playerTeam = (CsTeam)player.TeamNum;
+            if (playerTeam == CsTeam.CounterTerrorist)
+            {
+                player.ChangeTeam(CsTeam.Terrorist);
+                player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}你已被CTBAN{ChatColors.Red}|-------------|");
+                player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}剩余时间:{remaining[player.Index]}{ChatColors.Red}|-------------|");
+                player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}理由:{reason[player.Index]}{ChatColors.Red}|-------------|");
+                player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}你已被CTBAN{ChatColors.Red}|-------------|");
+            }
+        }
+        return HookResult.Continue;
+    }
+
     [GameEventHandler]
     public HookResult OnPlayerConnect(EventPlayerConnectFull @event, GameEventInfo info)
     {
@@ -123,34 +145,34 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
         }
         return HookResult.Continue;
     }
-    [GameEventHandler]
-    public HookResult OnPlayerChangeTeam(CCSPlayerController? player, CommandInfo command)
-    {
-        var client = player.Index;
+    // [GameEventHandler]
+    // public HookResult OnPlayerChangeTeam(CCSPlayerController? player, CommandInfo command)
+    // {
+    //     var client = player.Index;
 
-        if (!Int32.TryParse(command.ArgByIndex(1), out int team_switch))
-        {
-            return HookResult.Continue;
-        }
+    //     if (!Int32.TryParse(command.ArgByIndex(1), out int team_switch))
+    //     {
+    //         return HookResult.Continue;
+    //     }
 
-        if (player == null || !player.IsValid)
-            return HookResult.Continue;
-        CheckIfIsBanned(player);
+    //     if (player == null || !player.IsValid)
+    //         return HookResult.Continue;
+    //     CheckIfIsBanned(player);
 
-        CCSPlayerPawn? playerpawn = player.PlayerPawn.Value;
-        var player_team = team_switch;
+    //     CCSPlayerPawn? playerpawn = player.PlayerPawn.Value;
+    //     var player_team = team_switch;
 
 
-        if(player_team == 3)
-        {
-            if (banned[client] == true)
-            {
-                Showinfo[client] = 1;
-                player.ExecuteClientCommand("play sounds/ui/counter_beep.vsnd");
-                return HookResult.Stop;
-            }
-        }
+    //     if(player_team == 3)
+    //     {
+    //         if (banned[client] == true)
+    //         {
+    //             Showinfo[client] = 1;
+    //             player.ExecuteClientCommand("play sounds/ui/counter_beep.vsnd");
+    //             return HookResult.Stop;
+    //         }
+    //     }
 
-        return HookResult.Continue;
-    }
+    //     return HookResult.Continue;
+    // }
 }

@@ -16,7 +16,7 @@ public partial class CTBans
     {
         if (!AdminManager.PlayerHasPermissions(player, "@css/ban"))
         {
-            info.ReplyToCommand($" {Config.Prefix} You dosen't have permission to this command!");
+            info.ReplyToCommand($" {Config.Prefix} 你没有权限使用此指令!");
             return;
         }
         var Player = info.ArgByIndex(1);
@@ -24,7 +24,7 @@ public partial class CTBans
 
         if (Reason == null)
         {
-            info.ReplyToCommand($" {Config.Prefix} Reason canno't be a number! Example : css_ctsessionban <PlayerName> 'REASON' | Example2 : css_ctsessionban Player Greafing");
+            info.ReplyToCommand($" {Config.Prefix} 理由不合法");
             return;
         }
 
@@ -32,15 +32,15 @@ public partial class CTBans
         {
             if (find_player.PlayerName.ToString() == Player)
             {
-                info.ReplyToCommand($" {Config.Prefix} Player Name '{Player}' has been banned!");
+                info.ReplyToCommand($" {Config.Prefix} 玩家名 '{Player}' 已被CTBAN!");
             }
         }
-        info.ReplyToCommand($" {Config.Prefix} You successful ban player {Player}");
+        info.ReplyToCommand($" {Config.Prefix} 成功CTBAN {Player}");
         foreach (var find_player in Utilities.GetPlayers())
         {
             if (find_player.PlayerName.ToString() == Player)
             {
-                find_player.PrintToChat($" {Config.Prefix} You are banned from {ChatColors.LightBlue}CT{ChatColors.Default} by admin {ChatColors.Red}{player.PlayerName}{ChatColors.Default} for reason: {ChatColors.Gold}{Reason} ");
+                find_player.PrintToChat($" {Config.Prefix} 你已被禁止加入 {ChatColors.LightBlue}CT{ChatColors.Default} -来自管理员 {ChatColors.Red}{player.PlayerName}{ChatColors.Default} -理由: {ChatColors.Gold}{Reason} ");
                 Showinfo[find_player.Index] = 1;
                 banned[find_player.Index] = true;
                 reason[find_player.Index] = $"{Reason}";
@@ -54,7 +54,7 @@ public partial class CTBans
     {
         if (!AdminManager.PlayerHasPermissions(player, "@css/ban"))
         {
-            info.ReplyToCommand($" {Config.Prefix} You dosen't have permission to this command!");
+            info.ReplyToCommand($" {Config.Prefix} 你没有权限使用此指令!");
             return;
         }
         var SteamID = info.ArgByIndex(1);
@@ -74,14 +74,14 @@ public partial class CTBans
         {
             if (find_player.PlayerName.ToString() == SteamID)
             {
-                info.ReplyToCommand($" {Config.Prefix} Player name has been found, and got a banned to join in CT!");
+                info.ReplyToCommand($" {Config.Prefix} 已被CTBAN!");
                 SteamID = find_player.SteamID.ToString();
             }
             else
             {
                 if (SteamID == null || !IsInt(SteamID))
                 {
-                    info.ReplyToCommand($" {Config.Prefix} Player name not found! Steamid is must be number! Example : css_ctban <PlayerName/SteamID> <Hours> 'REASON' | Example2 : css_ctban 7777777777777 24 Greafing");
+                    info.ReplyToCommand($" {Config.Prefix} 玩家名未找到");
                     return;
                 }
             }
@@ -89,12 +89,12 @@ public partial class CTBans
 
         if (TimeHours == null || !IsInt(TimeHours))
         {
-            info.ReplyToCommand($" {Config.Prefix} Time must be in hours! Example : css_ctban <PlayerName/SteamID> <Hours> 'REASON' | Example2 : css_ctban 7777777777777 24 Greafing");
+            info.ReplyToCommand($" {Config.Prefix} 时间单位必须是小时");
             return;
         }
         else if (Reason == null || IsInt(Reason))
         {
-            info.ReplyToCommand($" {Config.Prefix} Reason canno't be a number! Example : css_ctban <PlayerName/SteamID> <Hours> 'REASON' | Example2 : css_ctban 7777777777777 24 Greafing");
+            info.ReplyToCommand($" {Config.Prefix} 理由不合法");
         }
         else
         {
@@ -127,19 +127,19 @@ public partial class CTBans
                 .Add("banned_by", $"{Bannedby}");
                 MySql.Table("deadswim_ctbans").Insert(values);
 
-                info.ReplyToCommand($" {Config.Prefix} You successful ban player with steamid {SteamID}");
+                info.ReplyToCommand($" {Config.Prefix} 成功封禁 {SteamID}");
                 foreach (var find_player in Utilities.GetPlayers())
                 {
                     if(find_player.SteamID.ToString() == SteamID)
                     {
-                        find_player.PrintToChat($" {Config.Prefix} You are banned from {ChatColors.LightBlue}CT{ChatColors.Default} by admin {ChatColors.Red}{player.PlayerName}{ChatColors.Default} for reason: {ChatColors.Gold}{Reason} ");
+                        find_player.PrintToChat($" {Config.Prefix} 你已被禁止加入 {ChatColors.LightBlue}CT{ChatColors.Default} -来自管理员 {ChatColors.Red}{player.PlayerName}{ChatColors.Default} -理由: {ChatColors.Gold}{Reason} ");
                         find_player.ChangeTeam(CounterStrikeSharp.API.Modules.Utils.CsTeam.Terrorist);
                     }
                 }
             }
             else
             {
-                info.ReplyToCommand($" {Config.Prefix} This SteamID it already is banned from admin!");
+                info.ReplyToCommand($" {Config.Prefix} 已经被ctban了!");
             }
         }
     }
@@ -148,13 +148,13 @@ public partial class CTBans
     {
         if (!AdminManager.PlayerHasPermissions(player, "@css/ban"))
         {
-            info.ReplyToCommand($" {Config.Prefix} You dosen't have permission to this command!");
+            info.ReplyToCommand($" {Config.Prefix} 你无权使用此指令!");
             return;
         }
         var SteamID = info.ArgByIndex(1);
         if (SteamID == null || !IsInt(SteamID))
         {
-            info.ReplyToCommand($" {Config.Prefix} Steamid is must be number! Example : css_unctban <SteamID> | Example2 : css_unctban 7777777777777");
+            info.ReplyToCommand($" {Config.Prefix} Steamid不合法");
             return;
         }
 
@@ -163,12 +163,12 @@ public partial class CTBans
         MySqlQueryResult result = MySql!.Table("deadswim_ctbans").Where(MySqlQueryCondition.New("ban_steamid", "=", SteamID)).Select();
         if (result.Rows == 0)
         {
-            info.ReplyToCommand($" {Config.Prefix} This steamid is not banned to connect in CT!");
+            info.ReplyToCommand($" {Config.Prefix} 这个steamid还没有被CTBAN!");
         }
         else
         {
             MySql.Table("deadswim_ctbans").Where($"ban_steamid = '{SteamID}'").Delete();
-            info.ReplyToCommand($" {Config.Prefix} You successful unban a player to play in CT Team!");
+            info.ReplyToCommand($" {Config.Prefix} 成功解封.");
         }
     }
     [ConsoleCommand("css_isctbanned", "Info about CT Ban")]
@@ -176,13 +176,13 @@ public partial class CTBans
     {
         if (!AdminManager.PlayerHasPermissions(player, "@css/ban"))
         {
-            info.ReplyToCommand($" {Config.Prefix} You dosen't have permission to this command!");
+            info.ReplyToCommand($" {Config.Prefix} 无权使用!");
             return;
         }
         var SteamID = info.ArgByIndex(1);
         if (SteamID == null || !IsInt(SteamID))
         {
-            info.ReplyToCommand($" {Config.Prefix} Steamid is must be number! Example : css_isctbanned <SteamID> | Example2 : css_isctbanned 7777777777777");
+            info.ReplyToCommand($" {Config.Prefix} Steamid必须是数字");
             return;
         }
 
@@ -191,7 +191,7 @@ public partial class CTBans
         MySqlQueryResult result = MySql!.Table("deadswim_ctbans").Where(MySqlQueryCondition.New("ban_steamid", "=", SteamID)).Select();
         if (result.Rows == 0)
         {
-            info.ReplyToCommand($" {Config.Prefix} This SteamID is not Banned to CT!");
+            info.ReplyToCommand($" {Config.Prefix} 这人没被CTBAN!");
         }
         else
         {
@@ -202,11 +202,11 @@ public partial class CTBans
             var nowtimeis = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             var timeRemainingFormatted =
             $"{timeRemaining.Days}d {timeRemaining.Hours}:{timeRemaining.Minutes:D2}:{timeRemaining.Seconds:D2}";
-            player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}Info about {SteamID} {ChatColors.Red}|-------------|");
-            player.PrintToChat($" {ChatColors.Default}SteamID {ChatColors.Red}{SteamID}{ChatColors.Default} is {ChatColors.Red}banned.");
-            player.PrintToChat($" {ChatColors.Default}Reason of ban is {ChatColors.Red}{reason}{ChatColors.Default}.");
-            player.PrintToChat($" {ChatColors.Default}Time of ban is {ChatColors.Red}{timeRemainingFormatted}{ChatColors.Default}.");
-            player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}Info about {SteamID} {ChatColors.Red}|-------------|");
+            player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}封禁信息 {SteamID} {ChatColors.Red}|-------------|");
+            player.PrintToChat($" {ChatColors.Default}SteamID {ChatColors.Red}{SteamID}{ChatColors.Default} 处于 {ChatColors.Red}封禁状态.");
+            player.PrintToChat($" {ChatColors.Default}理由 {ChatColors.Red}{reason}{ChatColors.Default}.");
+            player.PrintToChat($" {ChatColors.Default}时间 {ChatColors.Red}{timeRemainingFormatted}{ChatColors.Default}.");
+            player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}封禁信息 {SteamID} {ChatColors.Red}|-------------|");
         }
     }
 }
