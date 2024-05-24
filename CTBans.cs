@@ -92,7 +92,7 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
         if (player.PawnIsAlive)
         {
             var playerTeam = (CsTeam)player.TeamNum;
-            if (playerTeam == CsTeam.CounterTerrorist)
+            if (playerTeam == CsTeam.CounterTerrorist && CheckBan(player) == true)
             {
                 player.ChangeTeam(CsTeam.Terrorist);
                 player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}你已被CTBAN{ChatColors.Red}|-------------|");
