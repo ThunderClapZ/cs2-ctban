@@ -134,6 +134,7 @@ public partial class CTBans
                     {
                         find_player.PrintToChat($" {Config.Prefix} 你已被禁止加入 {ChatColors.LightBlue}CT{ChatColors.Default} -来自管理员 {ChatColors.Red}{player.PlayerName}{ChatColors.Default} -理由: {ChatColors.Gold}{Reason} ");
                         find_player.ChangeTeam(CounterStrikeSharp.API.Modules.Utils.CsTeam.Terrorist);
+                        Server.PrintToChatAll($" {find_player.PlayerName} {Config.Prefix} 已被禁止加入 {ChatColors.LightBlue}CT{ChatColors.Default} -来自管理员 {ChatColors.Red}{player.PlayerName}{ChatColors.Default} -理由: {ChatColors.Gold}{Reason} ");
                     }
                 }
             }
