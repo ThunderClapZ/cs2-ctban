@@ -5,3 +5,4 @@
 *.props
 *.targets
 /obj
+*.7z
