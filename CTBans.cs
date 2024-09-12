@@ -74,6 +74,16 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
                 player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}剩余时间:{remaining[player.Index]}{ChatColors.Red}|-------------|");
                 player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}理由:{reason[player.Index]}{ChatColors.Red}|-------------|");
                 player.PrintToChat($" {ChatColors.Red}|-------------| {ChatColors.Default}你已被CTBAN{ChatColors.Red}|-------------|");
+
+                var tSpawns = Utilities.FindAllEntitiesByDesignerName<SpawnPoint>("info_player_terrorist").ToList();
+                if (tSpawns.Count <= 0) return HookResult.Continue;
+                Random random = new Random();
+                int randomPostion = random.Next(1, tSpawns.Count);
+                Vector cellPostion = tSpawns[randomPostion].AbsOrigin!.With();
+                if (!player.PlayerPawn.IsValid) return HookResult.Continue;
+                if (player.PlayerPawn.Value == null) return HookResult.Continue;
+                var pawn = player.PlayerPawn.Value;
+                pawn.Teleport(cellPostion);
             }
         }
         return HookResult.Continue;
