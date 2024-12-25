@@ -1,18 +1,9 @@
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
-using CounterStrikeSharp.API.Core.Attributes.Registration;
-using CounterStrikeSharp.API.Modules.Commands;
-using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Utils;
-using CounterStrikeSharp.API.Modules.Menu;
 using CounterStrikeSharp.API.Core.Attributes;
-using CounterStrikeSharp.API.Modules.Timers;
-using System.ComponentModel;
-using CounterStrikeSharp.API.Modules.Memory;
 using Nexd.MySQL;
-using CounterStrikeSharp.API.Modules.Entities;
-using System;
-using System.Drawing;
+using StarCore.Utils;
 
 namespace CTBans;
 [MinimumApiVersion(100)]
@@ -42,7 +33,7 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
     private static readonly bool?[] session = new bool?[64];
 
 
-    public ConfigBan Config { get; set; }
+    public required ConfigBan Config { get; set; }
 
 
     public void OnConfigParsed(ConfigBan config)
@@ -61,9 +52,8 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
 
     public HookResult OnPlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
     {
-        CCSPlayerController player = @event.Userid;
-        if (player == null || !player.IsValid)
-            return HookResult.Continue;
+        var player = @event.Userid;
+        if (!Lib.IsPlayerValidAlive(player)) return HookResult.Continue;
         if (player.PawnIsAlive)
         {
             var playerTeam = (CsTeam)player.TeamNum;
@@ -82,7 +72,8 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
                 Vector cellPostion = tSpawns[randomPostion].AbsOrigin!.With();
                 if (!player.PlayerPawn.IsValid) return HookResult.Continue;
                 if (player.PlayerPawn.Value == null) return HookResult.Continue;
-                var pawn = player.PlayerPawn.Value;
+                var pawn = Lib.GetAlivePawn(player);
+                if (pawn == null) return HookResult.Continue;
                 pawn.Teleport(cellPostion);
             }
         }
@@ -91,9 +82,8 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
 
     public HookResult OnPlayerConnect(EventPlayerConnectFull @event, GameEventInfo info)
     {
-        CCSPlayerController player = @event.Userid;
-        if (player == null || !player.IsValid)
-            return HookResult.Continue;
+        var player = @event.Userid;
+        if (!Lib.IsPlayerValid(player)) return HookResult.Continue;
         var client = player.Index;
         if(CheckBan(player) == true)
         {

@@ -2,6 +2,7 @@ using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
 using Nexd.MySQL;
+using StarCore.Utils;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
@@ -59,43 +60,51 @@ public partial class CTBans
             WriteColor($"CT BANS - *[MYSQL ERROR WHILE LOADING: {ex.Message}]*", ConsoleColor.DarkRed);
         }
     }
-    public bool CheckBan(CCSPlayerController? player)
+    public bool CheckBan(CCSPlayerController player)
     {
-        MySqlDb MySql = new MySqlDb(Config.DBHost, Config.DBUser, Config.DBPassword, Config.DBDatabase);
-
-        MySqlQueryResult result = MySql!.Table("deadswim_ctbans").Where(MySqlQueryCondition.New("ban_steamid", "=", player.SteamID.ToString())).Select();
-        if (result.Rows == 1)
+        if (Lib.IsPlayerValid(player))
         {
-            return true;
+            MySqlDb MySql = new MySqlDb(Config.DBHost, Config.DBUser, Config.DBPassword, Config.DBDatabase);
+
+            MySqlQueryResult result = MySql!.Table("deadswim_ctbans").Where(MySqlQueryCondition.New("ban_steamid", "=", player.SteamID.ToString())).Select();
+            if (result.Rows == 1)
+            {
+                return true;
+            }
         }
         return false;
     }
-    public int GetPlayerBanTime(CCSPlayerController? player)
+    public int GetPlayerBanTime(CCSPlayerController player)
     {
-        MySqlDb MySql = new MySqlDb(Config.DBHost, Config.DBUser, Config.DBPassword, Config.DBDatabase);
-
-        MySqlQueryResult result = MySql!.Table("deadswim_ctbans").Where(MySqlQueryCondition.New("ban_steamid", "=", player.SteamID.ToString())).Select();
-        if (result.Rows == 1)
+        if (Lib.IsPlayerValid(player))
         {
-            return result.Get<int>(0, "end");
+            MySqlDb MySql = new MySqlDb(Config.DBHost, Config.DBUser, Config.DBPassword, Config.DBDatabase);
+
+            MySqlQueryResult result = MySql!.Table("deadswim_ctbans").Where(MySqlQueryCondition.New("ban_steamid", "=", player.SteamID.ToString())).Select();
+            if (result.Rows == 1)
+            {
+                return result.Get<int>(0, "end");
+            }
         }
         return -1;
     }
-    public string GetPlayerBanReason(CCSPlayerController? player)
+    public string GetPlayerBanReason(CCSPlayerController player)
     {
-        MySqlDb MySql = new MySqlDb(Config.DBHost, Config.DBUser, Config.DBPassword, Config.DBDatabase);
-
-        MySqlQueryResult result = MySql!.Table("deadswim_ctbans").Where(MySqlQueryCondition.New("ban_steamid", "=", player.SteamID.ToString())).Select();
-        if (result.Rows == 1)
+        if (Lib.IsPlayerValid(player))
         {
-            return $"{result.Get<string>(0, "reason")}";
+            MySqlDb MySql = new MySqlDb(Config.DBHost, Config.DBUser, Config.DBPassword, Config.DBDatabase);
+
+            MySqlQueryResult result = MySql!.Table("deadswim_ctbans").Where(MySqlQueryCondition.New("ban_steamid", "=", player.SteamID.ToString())).Select();
+            if (result.Rows == 1)
+            {
+                return $"{result.Get<string>(0, "reason")}";
+            }
         }
-        return null;
+        return "无理由";
     }
-    public void CheckIfIsBanned(CCSPlayerController? player) 
+    public void CheckIfIsBanned(CCSPlayerController player) 
     {
-        if (player == null)
-            return;
+        if (!Lib.IsPlayerValid(player)) return;
 
         var client = player.Index;
         if (CheckBan(player) == true)

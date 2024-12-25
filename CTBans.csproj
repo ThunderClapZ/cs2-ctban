@@ -8,8 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CounterStrikeSharp.API" Version="1.0.259" />
+    <PackageReference Include="CounterStrikeSharp.API" Version="1.0.291" />
     <PackageReference Include="Nexd.MySQL" Version="1.0.2" />
+    <ProjectReference Include="..\StarCore\StarCore\StarCore.csproj" />
   </ItemGroup>
 
 </Project>

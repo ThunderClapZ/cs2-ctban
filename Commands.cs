@@ -6,6 +6,7 @@ using CounterStrikeSharp.API.Modules.Commands;
 using Nexd.MySQL;
 using CounterStrikeSharp.API.Modules.Entities;
 using CounterStrikeSharp.API.Modules.Utils;
+using StarCore.Utils;
 
 namespace CTBans;
 
@@ -38,6 +39,8 @@ public partial class CTBans
         info.ReplyToCommand($" {Config.Prefix} 成功CTBAN {Player}");
         foreach (var find_player in Utilities.GetPlayers())
         {
+            if (!Lib.IsPlayerValid(player)) continue;
+            if (!Lib.IsPlayerValid(find_player)) continue;
             if (find_player.PlayerName.ToString() == Player)
             {
                 find_player.PrintToChat($" {Config.Prefix} 你已被禁止加入 {ChatColors.LightBlue}CT{ChatColors.Default} -来自管理员 {ChatColors.Red}{player.PlayerName}{ChatColors.Default} -理由: {ChatColors.Gold}{Reason} ");
@@ -130,6 +133,8 @@ public partial class CTBans
                 info.ReplyToCommand($" {Config.Prefix} 成功封禁 {SteamID}");
                 foreach (var find_player in Utilities.GetPlayers())
                 {
+                    if (!Lib.IsPlayerValid(find_player)) continue;
+                    if (!Lib.IsPlayerValid(player)) continue;
                     if(find_player.SteamID.ToString() == SteamID)
                     {
                         find_player.PrintToChat($" {Config.Prefix} 你已被禁止加入 {ChatColors.LightBlue}CT{ChatColors.Default} -来自管理员 {ChatColors.Red}{player.PlayerName}{ChatColors.Default} -理由: {ChatColors.Gold}{Reason} ");
@@ -175,6 +180,7 @@ public partial class CTBans
     [ConsoleCommand("css_isctbanned", "Info about CT Ban")]
     public void InfobanCT(CCSPlayerController? player, CommandInfo info)
     {
+        if (!Lib.IsPlayerValid(player)) return;
         if (!AdminManager.PlayerHasPermissions(player, "@css/ban"))
         {
             info.ReplyToCommand($" {Config.Prefix} 无权使用!");
