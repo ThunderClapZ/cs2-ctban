@@ -1,31 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ondra\\Desktop\\CTBans\\CTApi\\CTSharedApi.csproj": {}
+    "C:\\Users\\Thunder\\Desktop\\cs2-ctban\\CTApi\\CTSharedApi.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ondra\\Desktop\\CTBans\\CTApi\\CTSharedApi.csproj": {
+    "C:\\Users\\Thunder\\Desktop\\cs2-ctban\\CTApi\\CTSharedApi.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ondra\\Desktop\\CTBans\\CTApi\\CTSharedApi.csproj",
+        "projectUniqueName": "C:\\Users\\Thunder\\Desktop\\cs2-ctban\\CTApi\\CTSharedApi.csproj",
         "projectName": "CTSharedApi",
-        "projectPath": "C:\\Users\\ondra\\Desktop\\CTBans\\CTApi\\CTSharedApi.csproj",
-        "packagesPath": "C:\\Users\\ondra\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ondra\\Desktop\\CTBans\\CTApi\\obj\\",
+        "projectPath": "C:\\Users\\Thunder\\Desktop\\cs2-ctban\\CTApi\\CTSharedApi.csproj",
+        "packagesPath": "C:\\Users\\Thunder\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Thunder\\Desktop\\cs2-ctban\\CTApi\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\ondra\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\Thunder\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,8 +37,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -71,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
