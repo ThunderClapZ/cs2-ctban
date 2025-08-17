@@ -71,37 +71,12 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
         AddCommand(Config.UNBan, "UNBan Command", UnbanCT);
         AddCommand(Config.IsBanned, "IsBanned Command", InfobanCT);
 
+        RegisterEventHandler<EventPlayerSpawn>(OnPlayerSpawn);
+        RegisterEventHandler<EventPlayerConnectFull>(OnPlayerConnect);
+
         AddCommandListener("jointeam", OnPlayerChangeTeam);
-        RegisterListener<Listeners.OnTick>(() =>
-        {
-        for (int i = 1; i < Server.MaxPlayers; i++)
-        {
-            var ent = NativeAPI.GetEntityFromIndex(i);
-            if (ent == 0)
-                continue;
-            var client = new CCSPlayerController(ent);
-            if (client == null || !client.IsValid)
-                continue;
-                if (Showinfo[client.Index] == 1)
-                {
-                    var remain = remaining[client.Index];
-                    var res = reason[client.Index];
-                    if (remain == null || res == null) return;
-                    client.PrintToCenterHtml(
-                            $"<img src='https://icons.iconarchive.com/icons/paomedia/small-n-flat/48/sign-ban-icon.png'><br><br>" +
-                            $"{Localizer["PrintToCenter1"]}" +
-                            $"{Localizer["PrintToCenter2", remain]}" +
-                            $"{Localizer["PrintToCenter3", res]}");
-                    AddTimer(10.0f, () =>
-                    {
-                        Showinfo[client.Index] = null;
-                    });
-                }
-        }
-        });
 
     }
-    [GameEventHandler]
     public HookResult OnPlayerConnect(EventPlayerConnectFull @event, GameEventInfo info)
     {
         if (@event.Userid == null) return HookResult.Continue;
@@ -143,7 +118,6 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
         }
         return HookResult.Continue;
     }
-    [GameEventHandler]
     public HookResult OnPlayerChangeTeam(CCSPlayerController? player, CommandInfo command)
     {
         var client = player!.Index;
@@ -171,6 +145,20 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
             }
         }
 
+        return HookResult.Continue;
+    }
+    public HookResult OnPlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
+    {
+        if (@event.Userid == null) return HookResult.Continue;
+        CCSPlayerController player = @event.Userid;
+        if (player == null || !player.IsValid) return HookResult.Continue;
+
+        if(CheckBan(player) && player.Team == CsTeam.CounterTerrorist)
+        {
+            player.CommitSuicide(false, false);
+            player.SwitchTeam(CsTeam.Terrorist);
+        }
+        
         return HookResult.Continue;
     }
 }
