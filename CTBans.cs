@@ -77,12 +77,11 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
         AddCommandListener("jointeam", OnPlayerChangeTeam);
 
     }
-    public HookResult OnPlayerConnect(EventPlayerConnectFull @event, GameEventInfo info)
+    public HookResult OnPlayerConnect(EventPlayerConnectFull eventContext, GameEventInfo info)
     {
-        if (@event.Userid == null) return HookResult.Continue;
-        CCSPlayerController player = @event.Userid;
-        if (player == null || !player.IsValid)
-            return HookResult.Continue;
+        if (eventContext.Handle == IntPtr.Zero) return HookResult.Continue;
+        var player = eventContext.Userid;
+        if (player == null || !player.IsValid) return HookResult.Continue;
         var client = player.Index;
         if(CheckBan(player) == true)
         {
@@ -147,10 +146,10 @@ public partial class CTBans : BasePlugin, IPluginConfig<ConfigBan>
 
         return HookResult.Continue;
     }
-    public HookResult OnPlayerSpawn(EventPlayerSpawn @event, GameEventInfo info)
+    private HookResult OnPlayerSpawn(EventPlayerSpawn eventContext, GameEventInfo info)
     {
-        if (@event.Userid == null) return HookResult.Continue;
-        CCSPlayerController player = @event.Userid;
+        if (eventContext.Handle == IntPtr.Zero) return HookResult.Continue;
+        var player = eventContext.Userid;
         if (player == null || !player.IsValid) return HookResult.Continue;
 
         if(CheckBan(player) && player.Team == CsTeam.CounterTerrorist)
